@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  
+    xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:tx="http://www.springframework.org/schema/tx"  
+    xmlns:p="http://www.springframework.org/schema/p"  
+    xmlns:aop="http://www.springframework.org/schema/aop"   
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+    xsi:schemaLocation="http://www.springframework.org/schema/beans   
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd   
+    http://www.springframework.org/schema/tx   
+    http://www.springframework.org/schema/tx/spring-tx-3.0.xsd   
+    http://www.springframework.org/schema/aop    
+    http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">  
+	<!-- 配置数据源-->  
+    <bean id="jdbcDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">  
+    	<property name="driverClassName">  
+        	<value>com.mysql.jdbc.Driver</value>  
+    	</property>  
+    	<property name="url">  
+        	<value>jdbc:mysql://localhost:3306/springmybaitis?useUnicode=true&amp;characterEncoding=UTF-8</value>  
+       		<!--springmybaitis是我的数据库  -->
+    	</property>  
+    	<property name="username">  
+        	<value>root</value>  
+    	</property>  
+    	<property name="password">  
+        	<value>wuyunlong</value>  
+    	</property>  
+	</bean>  
+	
+	<!-- SqlSessionFactory   
+        	原生态的mybatis里，sqlMapConfig.xml全局配置文件里配置了environments元素【配置数据源】和一些映射文件，  
+        	我们是通过SqlSessionFactoryBuilder加载读取解析全局配置文件，然后生成SqlSessionFactory会话工厂。  
+        	现在mybatis和spring进行整合，则sqlMapConfig.xml里不再需要environments，数据源的配置交给了spring来管理；  
+        	SqlSessionFactoryBuilder解脱了，SqlSessionFactory会话工厂的创建交由spring来管理了  
+    --> 
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">  
+    	<!-- 数据源 --> 
+    	<property name="dataSource" ref="jdbcDataSource" /> 
+    	<!-- 加载mybatis配置文件(此时配置文件里面主要是一些映射文件，一些全局的配置信息) -->  
+    	<property name="configLocation" value="classpath:mybatis-config.xml"></property>  
+	</bean>  
+	
+	 <!-- mapper配置  
+       	 针对单个mapper接口生成代理对象，之前是根据sqlSession.getMapper(UserMapper.class)生成代理对象  
+       	 现在把生成代理对象的操作交过了spring来管理  
+     --> 
+	<bean id="userDao" class="org.mybatis.spring.mapper.MapperFactoryBean">  
+    	<!-- 指定mapper接口 --> 
+    	<property name="mapperInterface" value="com.springMyBatis.system.dao.UserDao"></property>  
+    	<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>  
+	</bean>  
+</beans>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC  
+    "-//mybatis.org//DTD Config 3.0//EN"  
+    "http://mybatis.org/dtd/mybatis-3-config.dtd">  
+<configuration>  
+    <mappers>  
+    	<!-- 扫描路径下的mapper映射文件 -->
+        <mapper resource="com/springMyBatis/system/dao/UserDao.xml"/>  
+    </mappers>  
+</configuration>
